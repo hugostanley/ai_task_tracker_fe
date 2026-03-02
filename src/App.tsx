@@ -19,6 +19,8 @@ interface Task {
   comments: Comment[]
 }
 
+const API = import.meta.env.VITE_BACKEND_API_URL
+
 function App() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
@@ -30,7 +32,7 @@ function App() {
 
   async function fetchTasks() {
     try {
-      const res = await fetch('/tasks')
+      const res = await fetch(`${API}/tasks`)
       if (res.ok) {
         const data = await res.json()
         setTasks(data)
@@ -62,7 +64,7 @@ function App() {
     setMessages(prev => [...prev, assistantMsg])
 
     try {
-      const res = await fetch('/chat', {
+      const res = await fetch(`${API}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: text }),
@@ -115,7 +117,7 @@ function App() {
   async function resetAll() {
     if (!window.confirm('Reset all data? This clears chat history and all tasks.')) return
     try {
-      await fetch('/reset', { method: 'POST' })
+      await fetch(`${API}/reset`, { method: 'POST' })
     } catch {
       // ignore
     }
